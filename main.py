@@ -21,6 +21,56 @@ def default_input(prompt, default=None):
         return response
 
 
+def montecarlo(returns):
+    """Run MCS and return investment at end-of-plan and bankrupt count."""
+    case_count = 0
+    bankrupt_count = 0
+    outcome = []
+
+    while case_count < int(num_cases):
+        investments = int(start_value)
+        start_year = random.randrange(0, len(returns))
+        duration = int(random.triangular(int(min_years), int(max_years),
+                                         int(most_likely_years)))
+        end_year = start_year + duration
+        lifespan = [i for i in range(start_year, end_year)]
+        bankrupt = 'no'
+
+        # build temporary lists for each case
+        lifespan_returns = []
+        lifespan_infl = []
+        for i in lifespan:
+            lifespan_returns.append(returns[i % len(returns)])
+            lifespan_infl.append(infl_rate[i % len(infl_rate)])
+
+        # loop through each year
+        for index, i in enumerate(lifespan_returns):
+            infl = lifespan_infl[index]
+
+            # don't adjust for inflation the first year
+            if index == 0:
+                withdraw_infl_adj = int(withdrawal)
+            else:
+                withdraw_infl_adj = int(withdraw_infl_adj * (1 + infl))
+
+            investments -= withdraw_infl_adj
+            investments -= int(investments * (1 + i))
+
+            if investments <= 0:
+                bankrupt = 'yes'
+                break
+
+        if bankrupt == 'yes':
+            outcome.append(0)
+            bankrupt_count += 1
+        else:
+            outcome.append(investments)
+
+        case_count += 1
+
+    return outcome, bankrupt_count
+
+
 # load data files with orginal datat in percent format
 print("\nNote:Input data should be in percent, not in decimal!\n")
 
@@ -49,7 +99,7 @@ while invest_type not in investment_type_args:
 
 
 start_value = default_input("Input starting value of investments: \n",
-                            ' 2000000')
+                            '2000000')
 while not start_value.isdigit():
     start_value = input("Invalid input! Input integer only: ")
 
@@ -79,3 +129,10 @@ while not max_years.isdigit():
 num_cases = default_input("Input number of cases to run: \n", '50000')
 while not num_cases.isdigit():
     num_cases = input("Invalid input! Input integer only: ")
+
+# check for erroneous input
+if not int(min_years) < int(most_likely_years) < int(max_years) \
+        or int(max_years) > 99:
+    print("\nProblem with input years,", file=sys.stderr)
+    print("Requires Min < ML < Max with Max <= 99.", file=sys.sterr)
+    sys.exit(1)
