@@ -71,6 +71,25 @@ def montecarlo(returns):
     return outcome, bankrupt_count
 
 
+def bankrupt_prob(outcome, bankrupt_count):
+    """Calculate and return chance of running out of money & other stats."""
+    total = len(outcome)
+    odds = round(100 * bankrupt_count / total, 1)
+
+    print("\nInvestment type: {}".format(invest_type))
+    print("Starting value: ${:,}".format(int(start_value)))
+    print("Annual withdrawal: ${:,}".format(int(withdrawal)))
+    print("Years in retirement (min-ml-max): {}-{}-{}"
+          .format(min_years, most_likely_years, max_years))
+    print("Number of runs: {:,}\n".format(len(outcome)))
+    print("Odds of running out of money: {}%\n".format(odds))
+    print("Average outcome: ${:,}".format(int(sum(outcome) / total)))
+    print("Minimum outcome: ${:,}".format(min(i for i in outcome)))
+    print("Maximum outcome: ${:,}".format(max(i for i in outcome)))
+
+    return odds
+
+
 # load data files with orginal datat in percent format
 print("\nNote:Input data should be in percent, not in decimal!\n")
 
