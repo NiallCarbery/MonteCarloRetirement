@@ -43,3 +43,39 @@ print("Press ENTER to take default value shown in [brackets]. \n")
 # get user input
 invest_type = default_input("Enter investment type: (stocks, bonds): \n",
                             'bonds').lower()
+while invest_type not in investment_type_args:
+    invest_type = input("Invalid investment. Enter investment type "
+                        "as listed in prompt: ")
+
+
+start_value = default_input("Input starting value of investments: \n",
+                            ' 2000000')
+while not start_value.isdigit():
+    start_value = input("Invalid input! Input integer only: ")
+
+
+withdrawal = default_input("Input annual pre-tax withdrawal"
+                           " (today's $): \n", '80000')
+while not withdrawal.isdigit():
+    withdrawal = input("Invalid input! Input integer only: ")
+
+
+min_years = default_input("Input minimum years in retirement: \n", '18')
+while not min_years.isdigit():
+    min_years = input("Invalid input! Input integer only: ")
+
+
+most_likely_years = default_input("Input most-likely years in retirement: \n",
+                                  '25')
+while not most_likely_years.isdigit():
+    most_likely_years = input("Invalid input! Input integer only: ")
+
+
+max_years = default_input("Input maximum years in retirement: \n", '40')
+while not max_years.isdigit():
+    max_years = input("Invalid input! Input integer only: ")
+
+
+num_cases = default_input("Input number of cases to run: \n", '50000')
+while not num_cases.isdigit():
+    num_cases = input("Invalid input! Input integer only: ")
